@@ -1,0 +1,8 @@
+{
+    "keys": [{
+        "kty": "RSA",
+        "e": "AQAB",
+        "kid": "7a1db1a4-e24e-4443-8fee-60f88bd2fc09",
+        "n": "pt0D_-w5qd3H1O4Ecm9jEX-IpZSoiHJ1PMtfcrcAzKRU8qgOhfEKJiN5TrCRlfyn2EnPTFKg1sg2DiU5aLKnJ-v5BK1akPN9OInLzvj4VQuYgN9nTUtAU-qTQi56Omi9y7w8HZCHCxBw5RmXABl75iOb7oOswUYF6OqbbXDUCTU"
+    }]
+}
