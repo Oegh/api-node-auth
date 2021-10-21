@@ -3,9 +3,15 @@ JWT authentication for ApiCujae
 
 ## Installation
 
-1- Clone repository from GitHub
+1- Clone repository from GitHub.
 
-2- Run npm install 
+2- Run npm install .
+
+3- Create .env file with API_PORT and MONGO_URI consts.
+
+4- Create private and public keys.
+
+5- Configure Keys.json with public key form verifyng JWT. 
 
 ## Installed Packages
 * cors
