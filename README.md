@@ -29,12 +29,28 @@ npm run start
 
 ## Enpoints
 
->/jwks Known public keys **GET**
+>**/jwks** Known public keys **GET**
 
->/user Get user Data From Api Cujae **POST**
+>**/user** Get user Data From Api Cujae **POST**
 
 * Request Headers
     - Autorization > With Bearer TOKEN
 
 * Request Body
     - audience
+
+>**/auth** Authenticate User **POST**
+
+* Request Body
+    - username
+    - password
+    - audience
+
+>**/verify** Example of verifying JWT in JavaScript **POST**
+
+* Request Headers
+    - Autorization > With Bearer TOKEN
+
+* Request Body
+    - audience
+
