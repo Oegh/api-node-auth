@@ -5,7 +5,7 @@ JWT authentication for ApiCujae
 
 1- Clone repository from GitHub
 
-2- Run npm istall 
+2- Run npm install 
 
 **Requisites**  
 * MongoDB
