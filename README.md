@@ -7,6 +7,14 @@ JWT authentication for ApiCujae
 
 2- Run npm install 
 
+**Installed Packages**
+* cors
+* fs
+* node-jose
+* jsonwebtoken
+* jwks-rsa
+* express
+
 **Requisites**  
 * MongoDB
 
