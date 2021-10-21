@@ -11,7 +11,7 @@ JWT authentication for ApiCujae
 
 4- Create private and public keys.
 
-5- Configure Keys.json with public key form verifyng JWT. 
+5- Configure Keys.json with public key
 
 ## Installed Packages
 * cors
