@@ -42,7 +42,7 @@ app.post("/user", auth, async(req, res) => {
         }
 
     } catch (err) {
-        return res.status(401).send('Invalid Tokensdf');
+        return res.status(401).send('Invalid Token');
     }
 });
 
