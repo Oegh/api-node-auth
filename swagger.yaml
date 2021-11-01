@@ -1,0 +1,291 @@
+openapi: 3.0.0
+info:
+  title: JWT Authentication with Refresh Tokens API Docs
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4001
+    description: Local development server
+
+  - url: https://localhost:4001
+    description: Production server
+
+paths:
+  /authenticate:
+    post:
+      summary: Authenticate user credentials and with ApiCujae and return a JWT token and a cookie with a refresh token
+      operationId: authenticate
+      tags:
+          - User Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "jason"
+                password:
+                  type: string
+                  example: "pass123"
+                audience:
+                  type: string
+                  example: "Pandora"
+              required:
+                - username
+                - password
+                - audience
+      responses:
+        "201":
+          description: User Name, a JWT access token and a refresh token cookie
+          headers:
+            Set-Cookie:
+              description: "`refreshToken`"
+              schema:
+                type: string
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFjbHJleWVzIiwiaWF0IjoxNjM1NzQ4NTcwLCJleHAiOjE2MzYwMDK3NzAsImF1ZCI9InBhbmRvcmEifQ.oNloDOt5snP_i3zdubAbYNo-ES1XTVib68D7VJpLvZ4; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    example: "616f64b5f477b98351b3105a"
+                  username:
+                    type: string
+                    example: "jason"
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFjbHJleWVzIiwiaWF0IjoxNjM1NzQ4NTcwLCJleHAiOjE2MzU3NTIxNzAsImF1ZCI6InBhbmRvcmEiLCJpc3MiOiJOb2RlIEF1dGggQXBpIiwic3ViIjoiYWNscmV5ZXMifQ.LhxJfN58kYBu42ZNs3ItyiXxGD381OQJ41L4U10WgarTorVntZ6wPXlWqF7otUYIeqmjWd6ex38zbqxwEABmB_9-o7SVEayVh9sni0Z0s1srZa_1Sh7EuFXu6QzMrwsirb7vqjOcTvKs7TxKZUS6EaqKTG9f6GAFxvihNluN_5I"
+        "400":
+          description: Some of the required inputs are missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "All input is required"
+        "401":
+          description: Api Cujae Users Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Could not verify your access level for that URL"
+  /refresh-token:
+    post:
+      summary: Use a refresh token to generate a new JWT token and a new refresh token
+      description: The refresh token is sent and returned via cookies.
+      operationId: refreshToken
+      tags:
+          - User Authentication
+      parameters:
+        - in: cookie
+          name: refreshToken
+          description: The `refreshToken` cookie
+          schema:
+            type: string
+            example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFjbHJleWVzIiwiaWF0IjoxNjM1NzUwNTI1LCJleHAiOjE2MzYwMDk3MjUsImF1ZCI6InBhbmRvcmEifQ.AciNhNV8iKYzopDHEVm_A7S--Yebhvzh3pbt1EjsYdo; Path=/; HttpOnly; Expires=Mon, 08 Nov 2021 07:08:45 GMT;
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                audience:
+                  type: string
+                  example: "Pandora"
+              required:
+                - audience
+      responses:
+        "200":
+          description: User details, a JWT access token and a new refresh token cookie
+          headers:
+            Set-Cookie:
+              description: "`refreshToken`"
+              schema:
+                type: string
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFjbHJleWVzIiwiaWF0IjoxNjM1NzQ4NTcwLCJleHAiOjE2MzYwMDK3NzAsImF1ZCI9InBhbmRvcmEifQ.oNloDOt5snP_i3zdubAbYNo-ES1XTVib68D7VJpLvZ4; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  username:
+                    type: string
+                    example: "jason"
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+        "401":
+          description: Re-Authenticate the user with credentials due to invalid tokens or attack suspects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Re-Authenticate User"
+        "403":
+          description: The system has detected that the token has been compromised, must log-out the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The user token has been compromised, Log-out users."
+        "500":
+          description: Due to internal server errors system could not revoke refresh token. Log-out users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The system could not revoke user please, Log-out users"
+  /user:
+    post:
+      summary: Return the user data available from Api Cujae LDAP /user
+      description: Return the user data from https://api.cujae.edu.cu/user using the access token provided by the system
+      operationId: getUser
+      tags:
+          - User Data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                audience:
+                  type: string
+                  example: "pandora"
+      responses:
+        "200":
+          description: The refresh token was successfully revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    example: user from api cujae
+        "400":
+          description: The refresh token is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    example: user from api cujae
+        "401":
+          description: Api Cujae Users Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Could not verify your access level for that URL"
+        "401":
+          description: The provided access token is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid Token"
+        "403":
+          description: No token present for authentication in authorization header
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "A token is required for authentication"
+  /jwks:
+    get:
+      summary: Get the public key in Json format
+      description: For all the clients to verify the JWT provided by the system
+      operationId: publicKeys
+      tags:
+          - User Authentication
+      responses:
+        "200":
+          description: An json object with the key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        kty:
+                          type: string
+                          example: "RSA"
+                        kid: 
+                          type: string
+                          example: 7a1db1a4-e24e-4443-8fee-60f88bd2fc09
+                        e:
+                          type: string
+                          example: "AQAB"
+                        n:
+                          type: string
+                          example: "pt0D_-w5qd3H1O4Ecm9jEX-IpZSoiHJ1PMtfcrcAzKRU8qgOhfEKJiN5TrCRlfyn2EnPTFKg1sg2DiU5aLKnJ-v5BK1akPN9OInLzvj4VQuYgN9nTUtAU-qTQi56Omi9y7w8HZCHCxBw5RmXABl75iOb7oOswUYF6OqbbXDUCTU"                         
+        
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid, or the user does not have access to perform the action
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Not Found"
