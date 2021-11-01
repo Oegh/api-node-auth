@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
-
-const config = process.env;
+const authConfig = require('../configs/auth.config');
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -9,21 +8,21 @@ const verifyToken = (req, res, next) => {
     const audience = req.body.audience;
 
     if (!token) {
-        return res.status(403).send("A token is required for authentication");
+        return next("A token is required for authentication");
     }
 
     if (!audience) {
-        return res.status(400).send("All input is required");
+        return next("All input is required");
     }
 
     try {
         const username = jwt.decode(token).username;
 
         if (!username) {
-            return res.status(401).send('Invalid Token');
+            return next('Invalid Token');
         }
 
-        var i = 'Api Cujae'; // Issuer 
+        var i = authConfig.issuer; // Issuer 
         var s = username; // Subject 
         var a = audience; // Audience
         // SIGNING OPTIONS
@@ -31,7 +30,7 @@ const verifyToken = (req, res, next) => {
             issuer: i,
             subject: s,
             audience: a,
-            expiresIn: "12h",
+            expiresIn: authConfig.jwtExpiration,
             algorithm: ["RS256"]
         };
 
@@ -39,7 +38,7 @@ const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, publicKey, verifyOptions);
         req.user = decoded;
     } catch (err) {
-        return res.status(401).send("Invalid Token");
+        return next("Invalid Token");
     }
 
     return next();
