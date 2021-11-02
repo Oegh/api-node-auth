@@ -35,6 +35,9 @@ function errorHandler(err, req, res, next) {
             // jwt authentication error
             return res.status(401).json({ message: 'Unauthorized' });
         default:
+            if (err.errorCode == 401) {
+                return res.status(401).json(err);
+            }
             return res.status(500).json({ message: err.message });
     }
 }
