@@ -1,5 +1,5 @@
 # api-node-auth
-JWT authentication for ApiCujae 
+JWT authentication
 
 ## Installation
 
